@@ -1,0 +1,32 @@
+import discord
+import os
+import random
+import requests
+from discord.ext import commands
+
+TOKEN = 'OTcyNDkxNjAxNjY4NjIwMzk5.GUA0lL.9kuxeIIAnmoNKHf_2AADVGL8AFmoweBZpBDZQ0'
+
+bot = commands.Bot(command_prefix='!')
+
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user.name}')
+
+@bot.command(name='gif')
+async def get_random_gif(ctx, *keywords):
+    api_key = 'f6jky8VgqatLkD6lV2nYQBIs8eWXxVXG'
+    base_url = 'https://api.giphy.com/v1/gifs/trash'
+
+    if keywords:
+        keyword = ' '.join(keywords)
+        params = {'api_key': api_key, 'tag': keyword}
+    else:
+        params = {'api_key': api_key}
+
+    response = requests.get(base_url, params=params)
+    data = response.json()
+    gif_url = data['data']['image_original_url']
+
+    await ctx.send(gif_url)
+
+bot.run(TOKEN)
